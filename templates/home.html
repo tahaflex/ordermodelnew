@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html >
+<!--From https://codepen.io/frytyler/pen/EGdtg-->
+<head>
+  <meta charset="UTF-8">
+  <title>ML API</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+  
+</head>
+
+<style>
+
+  .text-center{
+    text-align: center;
+  }
+
+  input{
+    margin-top: 5px;
+    margin-bottom: 20px;
+    min-width: 350px;
+    padding: 2px;
+    height: 30px !important;
+    border: 1px solid #1b227d ;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  input[type="text"], input[type="password"], input, textarea, select {
+    outline: none;
+  }
+
+  .custom-button{
+    width: 150px;
+    height: 40px;
+    font-size: 12px;
+    border-radius: 10px;
+    border: 1px solid #1b227d;
+    cursor: pointer;
+    text-align: center;
+    background: #1b227d;
+    border: 1px solid #1b227d;
+    color: white;
+  }
+  .custom-button:hover{
+    background: white;
+    color: #1b227d ;
+    transition: .6s;
+  }
+  .custom-heading{
+    color: #1b227d;
+    font-family: 'Poppins', sans-serif;
+  }
+  .label-custom{
+    color: #1b227d;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 12px;
+  }
+  .custom-card{
+    width: 800px;
+    background: white;
+    margin: auto;
+    justify-content: center;
+    padding: 10px;
+    margin-top: 2%;
+    margin-bottom: 5%;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+    border-radius: 20px;
+  }
+  .header{
+    height: 100px;
+    background: #f7f7f7;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+  }
+  .header .logo{
+    height: 80px;
+  }
+
+</style>
+
+
+<body style="background: #e66017; margin:0; height:100vh">
+<div class="header">
+  <img class="logo" src="../static/images/logo.jpeg">
+</div>
+
+ <div class="login custom-card">
+	<h1 class="text-center custom-heading" >Order Success Model Version 8.3</h1>
+  <!-- selected_features = ['order_code_v_obo','order_date','items_cost','area','city','fulfillment_center_id','merchant_name','phone_number','secondary_phone_number','apartment_no','floor_no','name']
+ -->
+    <div style="display: flex ; justify-content: center;" >
+
+      <!-- Main Input For Receiving Query to our ML -->
+      <form action="{{ url_for('predict')}}"method="post">
+        
+        <div  style="display:flex;">
+        
+          <div style="width: 50%; padding: 10px;">   
+
+            <label class="label-custom">Order Date</label></br>
+            <input type="date" name="order_date" placeholder="Order Date" /><br>
+<!--            <input type="date" value="2022-05-19" name="dt" placeholder="Order Date" required="required" /><br>  # min="2021-01-20" max="2023-01-20"-->
+
+            <label class="label-custom">Order Value</label></br>
+            <input type="number" name="items_cost" placeholder="Order Value E£" required="required" /><br>
+
+            <label class="label-custom">Area</label></br>
+            <input type="text" name="mapped_area" placeholder="Area ?" required="required" /><br>
+
+            <label class="label-custom">City</label></br>
+            <input type="text" name="mapped_city" placeholder="City?" required="required" /><br>
+
+            <label class="label-custom">Fullfillment Center ID</label></br>
+            <input type="number" name="fulfillment_center_id" placeholder="Fullfillment Center ID" required="required" /><br>
+
+            <label class="label-custom">Merchant Name</label></br>
+            <input type="text" name="merchant_name" placeholder="Merchant Name ?" required="required" /><br>
+
+          </div>
+          
+          <div style="width: 50% ; padding: 10px;">
+            <label class="label-custom">Phone Number Available?</label></br>
+            <input type="text" name="phone_number" placeholder="Phone number available?" required="required" /><br>
+
+            <label class="label-custom">Secondry Phone Number?</label></br>          
+            <input type="text" name="secondary_phone_number" placeholder="Secondary phone number available?" required="required" /><br>
+
+            <label class="label-custom">Apartment No.</label></br>
+            <input type="text" name="apartment_no" placeholder="Apartment number Known?" required="required" /><br>
+            
+            <label class="label-custom">Floor No.</label></br>
+            <input type="text" name="floor_no" placeholder="Floor number Known?" required="required" /><br>
+
+            <label class="label-custom">Created Date</label></br>
+            <input type="date" name="created_date" placeholder="Created Date" required="required" /><br>
+
+            <label class="label-custom">Fulfilled Date</label></br>
+            <input type="date" name="fulfilled_date" placeholder="Fulfilled Date" required="required" /><br>
+
+   
+          </div>
+
+
+        </div>
+        
+              
+       <div style="display: flex ; justify-content:center" >
+         <button type="submit" class="btn btn-primary btn-block btn-large custom-button">Predict</button>
+       </div>
+
+        </form>
+
+      </div>
+   <br>
+   <br>
+  
+  <div style="display: flex ; justify-content: center;" >
+      <h3 class="text-center" style="color:red"> {{prediction_text}} </h3>
+  </div>
+
+
+<!--  <h3 class="text-center custom-heading"> For Batch Prediction </h3>-->
+
+  <h4 class="text-center custom-heading"> ---------------- OR ----------------</h4>
+
+  <h3 class="text-center custom-heading"> Insert your CSV file and then download the Result</h3>
+  <form class="text-center custom-heading" action="/transform" method="post" enctype="multipart/form-data">
+      <input style="border:none !important;" type="file" name="data_file" class="btn btn-block"/>
+      </br>
+      <button type="submit" class="btn btn-primary btn-block btn-large custom-button">Predict</button>
+  </form>
+
+
+ </div>
+
+
+</body>
+</html>
